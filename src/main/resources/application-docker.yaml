@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0.33
+    container_name: rba
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: RBA
+      MYSQL_USER: root-admin
+      MYSQL_PASSWORD: root
+    ports:
+      - '3306:3306'
