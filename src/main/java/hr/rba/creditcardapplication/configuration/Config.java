@@ -11,9 +11,10 @@ import org.springframework.context.annotation.Configuration;
 public class Config {
 
     @Bean
-    public PersonFileWriter personFileWriter(){
+    public PersonFileWriter personFileWriter() {
         return new PersonFileWriter();
     }
+
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();

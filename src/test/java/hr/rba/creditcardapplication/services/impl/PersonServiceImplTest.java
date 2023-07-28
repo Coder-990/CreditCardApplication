@@ -2,8 +2,9 @@ package hr.rba.creditcardapplication.services.impl;
 
 import hr.rba.creditcardapplication.MockEntityDataValues;
 import hr.rba.creditcardapplication.PersonFileWriter;
-import hr.rba.creditcardapplication.exceptions.PersonNotFoundRuntimeException;
+import hr.rba.creditcardapplication.exceptions.PersonNotFoundByOibRuntimeException;
 import hr.rba.creditcardapplication.models.entities.Person;
+import hr.rba.creditcardapplication.repositories.FileRepository;
 import hr.rba.creditcardapplication.repositories.PersonRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Collections;
 import java.util.List;
 
-import static hr.rba.creditcardapplication.MockEntityDataValues.*;
+import static hr.rba.creditcardapplication.MockEntityDataValues.OIB_2;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -29,12 +30,16 @@ class PersonServiceImplTest {
 
     @InjectMocks
     private PersonServiceImpl personService;
+    @InjectMocks
+    private FileServiceImpl fileService;
     @Mock
     private PersonRepository personRepository;
+    @Mock
+    private FileRepository fileRepository;
 
     @BeforeEach
     void setup() {
-        personService = new PersonServiceImpl(personRepository, new ModelMapper(), new PersonFileWriter());
+        personService = new PersonServiceImpl(personRepository, new ModelMapper(), new PersonFileWriter(), fileService);
     }
 
     @Nested
@@ -82,8 +87,8 @@ class PersonServiceImplTest {
         @Test
         @DisplayName("GIVEN person record does not exists in database, WHEN a single person record is fetched, THEN error is thrown.")
         void testGetOneByNonExistingOib() {
-            Class<PersonNotFoundRuntimeException> expectedExceptionClass = PersonNotFoundRuntimeException.class;
-            when(personRepository.findByOib(OIB_2)).thenThrow(new PersonNotFoundRuntimeException(OIB_2));
+            Class<PersonNotFoundByOibRuntimeException> expectedExceptionClass = PersonNotFoundByOibRuntimeException.class;
+            when(personRepository.findByOib(OIB_2)).thenThrow(new PersonNotFoundByOibRuntimeException(OIB_2));
             Executable executable = () -> personService.getOneByOib(OIB_2);
             assertThrows(expectedExceptionClass, executable);
         }
@@ -125,7 +130,7 @@ class PersonServiceImplTest {
         @DisplayName("GIVEN person record does not exist in database, WHEN a person record is updated, THEN error is thrown.")
         void testUpdateNonExistingPerson() {
             final Person expectedPerson = MockEntityDataValues.personEntities().get(2);
-            Class<PersonNotFoundRuntimeException> expectedExceptionClass = PersonNotFoundRuntimeException.class;
+            Class<PersonNotFoundByOibRuntimeException> expectedExceptionClass = PersonNotFoundByOibRuntimeException.class;
             when(personRepository.findById(1L)).thenThrow(expectedExceptionClass);
             Executable executable = () -> personService.updateExistingPerson(expectedPerson, 1L);
             assertThrows(expectedExceptionClass, executable);

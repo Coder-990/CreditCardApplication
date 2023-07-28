@@ -2,13 +2,15 @@ package hr.rba.creditcardapplication.services.impl;
 
 
 import hr.rba.creditcardapplication.PersonFileWriter;
+import hr.rba.creditcardapplication.exceptions.PersonNotFoundByOibRuntimeException;
 import hr.rba.creditcardapplication.exceptions.PersonNotFoundRuntimeException;
-import hr.rba.creditcardapplication.exceptions.PersonOibExistsRuntimeException;
 import hr.rba.creditcardapplication.models.dtos.PersonDTO;
 import hr.rba.creditcardapplication.models.entities.Person;
 import hr.rba.creditcardapplication.repositories.PersonRepository;
+import hr.rba.creditcardapplication.services.FileService;
 import hr.rba.creditcardapplication.services.PersonService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,25 +19,40 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
 
+
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
     private final PersonFileWriter personFileWriter;
+    private final FileService fileService;
 
     @Override
     public List<Person> getAll() {
-        return personRepository.findAll();
+        return this.personRepository.findAll();
     }
 
     @Override
     public Person getOneByOib(final String oib) {
-        Optional<Person> person = personRepository.findByOib(oib);
-        person.ifPresent(personFileWriter::createPersonFile);
-        return person.orElseThrow(() -> new PersonNotFoundRuntimeException(oib));
+        Optional<Person> person = this.personRepository.findByOib(oib);
+        person.ifPresent(this.personFileWriter::createPersonFile);
+        return person.orElseThrow(() -> new PersonNotFoundByOibRuntimeException(oib));
     }
+
+//    private void checkIfPersonContainsMoreThanOneActiveFile(final List<Person> personList, final Person person) {
+//        for (Person p : personList) {
+//            if (p.getFile().getStatus().compareTo(person.getFile().getStatus()) >= 0) {
+//
+//            } else {
+//                log.error(ERROR_MULTI_FILE);
+//            }
+//
+//        }
+//    }
+
     @Override
     public Person storePerson(final Person person) {
         return this.savePerson(person);
@@ -43,14 +60,14 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person updateExistingPerson(final Person newPersonValue, final Long id) {
-        return Optional.of(personRepository.findById(id).orElseThrow(() -> new PersonNotFoundRuntimeException(newPersonValue.getOib())))
+        return Optional.of(this.personRepository.findById(id).orElseThrow(() -> new PersonNotFoundRuntimeException(newPersonValue.getId())))
                 .map(existingPerson -> {
                     existingPerson.setOib(newPersonValue.getOib());
                     existingPerson.setName(newPersonValue.getName());
                     existingPerson.setLastName(newPersonValue.getLastName());
-                    existingPerson.setCreditCardStatus(newPersonValue.getCreditCardStatus());
-                    return this.savePerson(existingPerson);
-                }).orElseThrow(() -> new PersonOibExistsRuntimeException(newPersonValue));
+                    existingPerson.setFile(newPersonValue.getFile());
+                    return this.personRepository.save(existingPerson);
+                }).orElseThrow(() -> new PersonNotFoundRuntimeException(newPersonValue.getId()));
     }
 
     @Override
@@ -76,7 +93,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     private Person savePerson(final Person person) {
-        return personRepository.save(person);
+        person.setFile(this.fileService.storeFile());
+        return this.personRepository.save(person);
     }
 
     @Override

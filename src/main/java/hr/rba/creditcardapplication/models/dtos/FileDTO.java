@@ -7,11 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @AllArgsConstructor
-public class PersonDTO {
+public class FileDTO {
 
     Long id;
-    String oib;
-    String name;
-    String lastName;
-    FileDTO file;
+    String status;
 }

@@ -13,7 +13,6 @@ import java.util.Optional;
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
     Optional<Person> findByOib(String oib);
-
     long removePersonById(final Long id);
     String removePersonByOib(final String oib);
 }
