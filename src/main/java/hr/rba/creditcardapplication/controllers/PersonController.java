@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -26,7 +25,7 @@ public class PersonController {
     @GetMapping()
     public List<PersonDTO> getAll() {
         final List<PersonDTO> personDTOS = this.personService.getAll()
-                .stream().map(this.personService::convertToDto).collect(Collectors.toList());
+                .stream().map(this.personService::convertToDto).toList();
         log.info("Persons initialized successfully");
         return personDTOS;
     }

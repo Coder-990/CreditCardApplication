@@ -1,13 +1,10 @@
 package hr.rba.creditcardapplication.services.impl;
 
-import hr.rba.creditcardapplication.exceptions.FileNotFoundRuntimeException;
 import hr.rba.creditcardapplication.models.entities.File;
 import hr.rba.creditcardapplication.repositories.FileRepository;
 import hr.rba.creditcardapplication.services.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +21,8 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public File updateFileToInactive(final File newFileValue, final Long id) {
-        return Optional.of(fileRepository.findById(id).orElseThrow(() -> new FileNotFoundRuntimeException(newFileValue.getId())))
-                .map(file -> {
-                    file.setStatus(INACTIVE);
-                    return fileRepository.saveAndFlush(file);
-                }).orElseThrow(() -> new FileNotFoundRuntimeException(newFileValue.getId()));
+    public File storeNewInactiveFile() {
+        final File file = File.builder().status(INACTIVE).build();
+        return this.fileRepository.save(file);
     }
 }

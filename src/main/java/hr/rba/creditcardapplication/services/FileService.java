@@ -6,5 +6,5 @@ public interface FileService {
 
     File storeFile();
 
-    File updateFileToInactive(File newFileValue, Long id);
+    File storeNewInactiveFile();
 }

@@ -24,7 +24,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
 
-
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
     private final PersonFileWriter personFileWriter;
@@ -42,20 +41,14 @@ public class PersonServiceImpl implements PersonService {
         return person.orElseThrow(() -> new PersonNotFoundByOibRuntimeException(oib));
     }
 
-//    private void checkIfPersonContainsMoreThanOneActiveFile(final List<Person> personList, final Person person) {
-//        for (Person p : personList) {
-//            if (p.getFile().getStatus().compareTo(person.getFile().getStatus()) >= 0) {
-//
-//            } else {
-//                log.error(ERROR_MULTI_FILE);
-//            }
-//
-//        }
-//    }
+    public Person getOneByOibInActive(final String oib) {
+        Optional<Person> person = this.personRepository.findByOib(oib);
+        return person.orElseThrow(() -> new PersonNotFoundByOibRuntimeException(oib));
+    }
 
     @Override
     public Person storePerson(final Person person) {
-        return this.savePerson(person);
+        return this.saveActivePerson(person);
     }
 
     @Override
@@ -83,6 +76,9 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public HttpStatus deletePersonByOib(final String oib) {
+        this.saveInActivePerson(this.getOneByOibInActive(oib));
+        personFileWriter.deleteFileOfDeletedPerson(oib);
+        this.getOneByOib(oib);
         final HttpStatus httpStatus;
         if (!this.personRepository.removePersonByOib(oib).equals("0")) {
             httpStatus = HttpStatus.NO_CONTENT;
@@ -92,7 +88,11 @@ public class PersonServiceImpl implements PersonService {
         return httpStatus;
     }
 
-    private Person savePerson(final Person person) {
+    private void saveInActivePerson(final Person person) {
+        person.setFile(this.fileService.storeNewInactiveFile());
+        this.personRepository.save(person);
+    }
+    private Person saveActivePerson(final Person person) {
         person.setFile(this.fileService.storeFile());
         return this.personRepository.save(person);
     }

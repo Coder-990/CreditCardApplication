@@ -2,8 +2,16 @@ DROP DATABASE IF EXISTS RBA;
 CREATE DATABASE RBA;
 use RBA;
 
-drop table if exists PERSON;
+# alter table PERSON drop foreign key FKbumc7ja3cfw4a8ukpdvix9x2t;
 drop table if exists FILE;
+drop table if exists PERSON;
+
+create table FILE
+(
+    id     bigint not null auto_increment,
+    STATUS varchar(255),
+    primary key (id)
+);
 
 create table PERSON
 (
@@ -15,12 +23,7 @@ create table PERSON
     primary key (id)
 );
 
-create table FILE
-(
-    id     bigint not null auto_increment,
-    STATUS varchar(255),
-    primary key (id)
-);
+
 
 alter table PERSON
     add constraint UK_4dexjyuf37ycrj612bfc8fl9c unique (FILE);
