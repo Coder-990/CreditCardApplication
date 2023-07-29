@@ -20,12 +20,12 @@ public class PersonFileWriter implements Serializable {
 
     public void createPersonFile(final Person person) {
         final ObjectMapper objectMapper = new ObjectMapper();
-        final File file = new File(FILE_LOCATION, person.getOib() + " " + Timestamp.from(Instant.now()));
+        final File file = new File(FILE_LOCATION, person.getOib() + " " + Timestamp.from(Instant.now()).toString().replace(":", "-"));
         if (!file.exists()) {
             try (FileOutputStream fos = new FileOutputStream(file);
                  final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
-//                bw.write(objectMapper.writeValueAsString(person));
-                bw.write(this.buildPersonValuesAsStringInRow(person, objectMapper).toString());
+                bw.write(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(person));
+//                bw.write(this.buildPersonValuesAsStringInRow(person, objectMapper).toString());
                 log.info(SUCESS_MSG_FILE_WRITTEN);
             } catch (RuntimeException | IOException ex) {
                 log.error(ERROR_MSG_FILE_WRITING + person, ex.fillInStackTrace());
@@ -35,14 +35,16 @@ public class PersonFileWriter implements Serializable {
         }
     }
 
-    public void deleteFileOfDeletedPerson(final String oib) {
+    public void isFileDeletedOfDeletedPerson(final String oib) {
         File[] list = new File(FILE_LOCATION).listFiles();
         if (list != null) {
             for (File element : list) {
                 String substring = element.getName().substring(0, 11);
                 if (substring.equals(oib)) {
-                    element.deleteOnExit();
-                    log.info("Oib matches and old file will be deleted, and replaced with new one of status 'INACTIVE'");
+                    if (!element.delete()) {
+                        element.deleteOnExit();
+                    }
+                    log.info("Oib matches and old file is deleted, and replaced with new one of status 'INACTIVE'");
                 }
             }
         } else {
@@ -56,6 +58,5 @@ public class PersonFileWriter implements Serializable {
                 .append(objectMapper.writeValueAsString(person.getName())).append("\n")
                 .append(objectMapper.writeValueAsString(person.getLastName())).append("\n")
                 .append(objectMapper.writeValueAsString(person.getFile().getStatus()));
-
     }
 }

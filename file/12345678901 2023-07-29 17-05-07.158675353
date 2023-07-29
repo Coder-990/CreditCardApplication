@@ -1,0 +1,10 @@
+{
+  "id" : 2,
+  "oib" : "12345678901",
+  "name" : "Pero",
+  "lastName" : "Peric",
+  "file" : {
+    "id" : 5,
+    "status" : "INACTIVE"
+  }
+}

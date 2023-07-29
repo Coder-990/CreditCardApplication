@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "65b43073-7c11-44e1-8fe9-00948b7e059e",
+		"_postman_id": "9b983cb3-b54b-4ced-aa12-63926ae3c391",
 		"name": "Rba postman test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "15839436"
@@ -12,69 +12,20 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:8080/api/v1/persons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"persons"
+					]
 				}
 			},
 			"response": [
-				{
-					"name": "New Request",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/persons",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"v1",
-								"persons"
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Vary",
-							"value": "Origin"
-						},
-						{
-							"key": "Vary",
-							"value": "Access-Control-Request-Method"
-						},
-						{
-							"key": "Vary",
-							"value": "Access-Control-Request-Headers"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json"
-						},
-						{
-							"key": "Transfer-Encoding",
-							"value": "chunked"
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 27 Jul 2023 23:24:50 GMT"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=60"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						}
-					],
-					"cookie": [],
-					"body": "[\n    {\n        \"id\": 1,\n        \"oib\": \"12545214525\",\n        \"name\": \"Ana\",\n        \"lastName\": \"Anic\",\n        \"file\": {\n            \"id\": 1,\n            \"status\": \"ACTIVE\"\n        }\n    },\n    {\n        \"id\": 2,\n        \"oib\": \"58574569658\",\n        \"name\": \"Ivo\",\n        \"lastName\": \"Ivic\",\n        \"file\": {\n            \"id\": 2,\n            \"status\": \"ACTIVE\"\n        }\n    },\n    {\n        \"id\": 3,\n        \"oib\": \"52698521256\",\n        \"name\": \"Duro\",\n        \"lastName\": \"Duric\",\n        \"file\": {\n            \"id\": 3,\n            \"status\": \"ACTIVE\"\n        }\n    }\n]"
-				},
 				{
 					"name": "Get all",
 					"originalRequest": {
@@ -142,12 +93,23 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:8080/api/v1/persons/52698521256",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"persons",
+						"52698521256"
+					]
 				}
 			},
 			"response": [
 				{
-					"name": "New Request",
+					"name": "Get one by Oib",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
@@ -207,7 +169,7 @@
 					"body": "{\n    \"id\": 3,\n    \"oib\": \"52698521256\",\n    \"name\": \"Duro\",\n    \"lastName\": \"Duric\",\n    \"file\": {\n        \"id\": 3,\n        \"status\": \"ACTIVE\"\n    }\n}"
 				},
 				{
-					"name": "New Request",
+					"name": "Get one by Oib",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
@@ -271,15 +233,34 @@
 		{
 			"name": "storePerson",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"oib\": \"52698521256\",\n    \"name\": \"Duro\",\n    \"lastName\": \"Duric\",\n    \"file\": {\n        \"status\": \"ACTIVE\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:8080/api/v1/persons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"persons"
+					]
 				}
 			},
 			"response": [
 				{
-					"name": "New Request",
+					"name": "storePerson",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
@@ -415,7 +396,7 @@
 					"body": "{\n    \"id\": 2,\n    \"oib\": \"52698521256\",\n    \"name\": \"Duro\",\n    \"lastName\": \"Duric\",\n    \"file\": {\n        \"id\": 2,\n        \"status\": \"ACTIVE\"\n    }\n}"
 				},
 				{
-					"name": "New Request",
+					"name": "storePerson",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
@@ -481,16 +462,104 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"id\": 3,\n    \"oib\": \"12545214525\",\n    \"name\": \"Ana\",\n    \"lastName\": \"Anic\",\n    \"file\": {\n        \"id\": 3,\n        \"status\": \"ACTIVE\"\n    }\n}"
+				},
+				{
+					"name": "storePerson",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oib\": \"12345678901\",\n    \"name\": \"Ana\",\n    \"lastName\": \"Anic\",\n    \"file\": {\n        \"status\": \"ACTIVE\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/persons",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"persons"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 29 Jul 2023 15:09:12 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 2,\n    \"oib\": \"12345678901\",\n    \"name\": \"Ana\",\n    \"lastName\": \"Anic\",\n    \"file\": {\n        \"id\": 3,\n        \"status\": \"ACTIVE\"\n    }\n}"
 				}
 			]
 		},
 		{
 			"name": "updatePerson",
 			"request": {
-				"method": "GET",
+				"method": "PUT",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"oib\": \"12345678901\",\n    \"name\": \"Pero\",\n    \"lastName\": \"Peric\",\n    \"file\": {\n        \"status\": \"ACTIVE\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:8080/api/v1/persons/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"persons",
+						"2"
+					]
 				}
 			},
 			"response": [
@@ -562,21 +631,101 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"id\": 4,\n    \"oib\": \"21232526952\",\n    \"name\": \"Janko\",\n    \"lastName\": \"Jankic\",\n    \"file\": {\n        \"id\": 5,\n        \"status\": \"ACTIVE\"\n    }\n}"
+				},
+				{
+					"name": "updatePerson",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oib\": \"2345678901\",\n    \"name\": \"Pero\",\n    \"lastName\": \"Peric\",\n    \"file\": {\n        \"status\": \"ACTIVE\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/persons/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"2"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 29 Jul 2023 15:01:44 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 2,\n    \"oib\": \"2345678901\",\n    \"name\": \"Pero\",\n    \"lastName\": \"Peric\",\n    \"file\": {\n        \"id\": 3,\n        \"status\": \"ACTIVE\"\n    }\n}"
 				}
 			]
 		},
 		{
-			"name": "New Request",
+			"name": "DeleteByOib",
 			"request": {
-				"method": "GET",
+				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:8080/api/v1/persons/12345678901",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"persons",
+						"12345678901"
+					]
 				}
 			},
 			"response": [
 				{
-					"name": "New Request",
+					"name": "DeleteByOib",
 					"originalRequest": {
 						"method": "DELETE",
 						"header": [],
@@ -636,7 +785,7 @@
 					"body": "\"NO_CONTENT\""
 				},
 				{
-					"name": "New Request",
+					"name": "DeleteByOib",
 					"originalRequest": {
 						"method": "DELETE",
 						"header": [],

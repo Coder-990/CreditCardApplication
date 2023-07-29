@@ -77,7 +77,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public HttpStatus deletePersonByOib(final String oib) {
         this.saveInActivePerson(this.getOneByOibInActive(oib));
-        personFileWriter.deleteFileOfDeletedPerson(oib);
+     personFileWriter.isFileDeletedOfDeletedPerson(oib);
         this.getOneByOib(oib);
         final HttpStatus httpStatus;
         if (!this.personRepository.removePersonByOib(oib).equals("0")) {
