@@ -6,12 +6,14 @@ import hr.rba.creditcardapplication.services.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static hr.rba.creditcardapplication.util.Constants.ACTIVE;
+import static hr.rba.creditcardapplication.util.Constants.INACTIVE;
+
 @Service
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
 
-    public static final String ACTIVE = "ACTIVE";
-    public static final String INACTIVE = "INACTIVE";
+
     private final FileRepository fileRepository;
 
     @Override

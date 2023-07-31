@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static hr.rba.creditcardapplication.util.Constants.*;
+
 @Slf4j
 @RestController
 @RequestMapping(PersonController.BASE_URL)
@@ -19,6 +21,8 @@ import java.util.List;
 public class PersonController {
 
     public static final String BASE_URL = "api/v1/persons";
+    public static final String OIB = "/{oib}";
+    public static final String ID = "/{id}";
 
     private final PersonService personService;
 
@@ -26,41 +30,39 @@ public class PersonController {
     public List<PersonDTO> getAll() {
         final List<PersonDTO> personDTOS = this.personService.getAll()
                 .stream().map(this.personService::convertToDto).toList();
-        log.info("Persons initialized successfully");
+        if (personDTOS.isEmpty()) {
+            log.info(EMPTY_LIST);
+        } else {
+            log.info(PERSONS + INITIALIZED_SUCCESSFULLY);
+        }
         return personDTOS;
     }
 
-    @GetMapping("/{oib}")
+    @GetMapping(OIB)
     public ResponseEntity<PersonDTO> getByOib(@PathVariable final String oib) {
         final Person person = this.personService.getOneByOib(oib);
-        log.info("Person fetched successfully by oib");
+        log.info(PERSON+ SUCCESSFULLY_BY_OIB);
         return this.personService.getPersonDTOResponseEntity(person);
     }
 
     @PostMapping()
     public ResponseEntity<PersonDTO> store(@RequestBody final PersonDTO personDTO) {
         final Person person = this.personService.storePerson(this.personService.convertToEntity(personDTO));
-        log.info("Person stored permanently");
+        log.info(PERSON + STORED_PERMANENTLY);
         return this.personService.savePersonDTOResponseEntity(person);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(ID)
     public ResponseEntity<PersonDTO> update(@RequestBody final PersonDTO personDTO, @PathVariable final Long id) {
         final Person person = this.personService.updateExistingPerson(this.personService.convertToEntity(personDTO), id);
-        log.info("Person updated successfully");
+        log.info(PERSON + UPDATED_SUCCESSFULLY);
         return this.personService.savePersonDTOResponseEntity(person);
     }
 
-//    @DeleteMapping("/{id}")
-//    public HttpStatus delete(@PathVariable final Long id) {
-//        final HttpStatus status = this.personService.deletePersonById(id);
-//        log.info("Person deleted successfully");
-//        return status;
-//    }
-    @DeleteMapping("/{oib}")
+    @DeleteMapping(OIB)
     public HttpStatus delete(@PathVariable final String oib) {
         final HttpStatus status = this.personService.deletePersonByOib(oib);
-        log.info("Person deleted successfully");
+        log.info(PERSON + DELETED_SUCCESSFULLY);
         return status;
     }
 }

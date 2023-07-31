@@ -12,7 +12,6 @@ import java.util.Optional;
 @Transactional
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    Optional<Person> findByOib(String oib);
-    long removePersonById(final Long id);
+    Optional<Person> findByOib(final String oib);
     String removePersonByOib(final String oib);
 }

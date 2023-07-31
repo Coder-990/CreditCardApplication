@@ -1,7 +1,7 @@
 package hr.rba.creditcardapplication.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.rba.creditcardapplication.MockEntityDataValues;
-import hr.rba.creditcardapplication.PersonFileWriter;
 import hr.rba.creditcardapplication.exceptions.PersonNotFoundByOibRuntimeException;
 import hr.rba.creditcardapplication.models.entities.Person;
 import hr.rba.creditcardapplication.repositories.FileRepository;
@@ -39,7 +39,7 @@ class PersonServiceImplTest {
 
     @BeforeEach
     void setup() {
-        personService = new PersonServiceImpl(personRepository, new ModelMapper(), new PersonFileWriter(), fileService);
+        personService = new PersonServiceImpl(personRepository, new ModelMapper(), new FileWriterServiceImpl(new ObjectMapper()), fileService);
     }
 
     @Nested
@@ -140,13 +140,6 @@ class PersonServiceImplTest {
     @Nested
     @DisplayName("PersonServiceTest delete person")
     class PersonServiceTestDeletePerson {
-        @Test
-        @DisplayName("GIVEN person record either exist or not, WHEN a single person record is deleted, THEN repository delete method should be called once.")
-        void testDeletePersonById() {
-            final Long personId = MockEntityDataValues.personEntities().get(0).getId();
-            personRepository.removePersonById(personId);
-            verify(personRepository, times(1)).removePersonById(personId);
-        }
 
         @Test
         @DisplayName("GIVEN person record either exist or not, WHEN a single person record is deleted, THEN repository delete method should be called once.")

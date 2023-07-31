@@ -17,8 +17,6 @@ public interface PersonService {
 
     Person updateExistingPerson(Person newPersonValue, Long id);
 
-    HttpStatus deletePersonById(Long id);
-
     HttpStatus deletePersonByOib(String oib);
 
     ResponseEntity<PersonDTO> getPersonDTOResponseEntity(Person person);

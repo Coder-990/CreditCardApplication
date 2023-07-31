@@ -1,13 +1,13 @@
 package hr.rba.creditcardapplication.services.impl;
 
 
-import hr.rba.creditcardapplication.PersonFileWriter;
 import hr.rba.creditcardapplication.exceptions.PersonNotFoundByOibRuntimeException;
 import hr.rba.creditcardapplication.exceptions.PersonNotFoundRuntimeException;
 import hr.rba.creditcardapplication.models.dtos.PersonDTO;
 import hr.rba.creditcardapplication.models.entities.Person;
 import hr.rba.creditcardapplication.repositories.PersonRepository;
 import hr.rba.creditcardapplication.services.FileService;
+import hr.rba.creditcardapplication.services.FileWriterService;
 import hr.rba.creditcardapplication.services.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
-    private final PersonFileWriter personFileWriter;
+    private final FileWriterService fileWriterService;
     private final FileService fileService;
 
     @Override
@@ -37,13 +37,14 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person getOneByOib(final String oib) {
         Optional<Person> person = this.personRepository.findByOib(oib);
-        person.ifPresent(this.personFileWriter::createPersonFile);
+        if (oib != null) {
+            person.ifPresent(this.fileWriterService::createPersonFile);
+        }
         return person.orElseThrow(() -> new PersonNotFoundByOibRuntimeException(oib));
     }
 
     public Person getOneByOibInActive(final String oib) {
-        Optional<Person> person = this.personRepository.findByOib(oib);
-        return person.orElseThrow(() -> new PersonNotFoundByOibRuntimeException(oib));
+        return this.personRepository.findByOib(oib).orElseThrow(() -> new PersonNotFoundByOibRuntimeException(oib));
     }
 
     @Override
@@ -60,25 +61,12 @@ public class PersonServiceImpl implements PersonService {
                     existingPerson.setLastName(newPersonValue.getLastName());
                     existingPerson.setFile(newPersonValue.getFile());
                     return this.personRepository.save(existingPerson);
-                }).orElseThrow(() -> new PersonNotFoundRuntimeException(newPersonValue.getId()));
-    }
-
-    @Override
-    public HttpStatus deletePersonById(final Long id) {
-        final HttpStatus httpStatus;
-        if (this.personRepository.removePersonById(id) > 0) {
-            httpStatus = HttpStatus.NO_CONTENT;
-        } else {
-            httpStatus = HttpStatus.UNAUTHORIZED;
-        }
-        return httpStatus;
+                }).orElseThrow(() -> new PersonNotFoundByOibRuntimeException(newPersonValue.getOib()));
     }
 
     @Override
     public HttpStatus deletePersonByOib(final String oib) {
-        this.saveInActivePerson(this.getOneByOibInActive(oib));
-     personFileWriter.isFileDeletedOfDeletedPerson(oib);
-        this.getOneByOib(oib);
+        this.changeFileStatus(oib);
         final HttpStatus httpStatus;
         if (!this.personRepository.removePersonByOib(oib).equals("0")) {
             httpStatus = HttpStatus.NO_CONTENT;
@@ -88,10 +76,20 @@ public class PersonServiceImpl implements PersonService {
         return httpStatus;
     }
 
+    private void changeFileStatus(final String oib) {
+        if (oib != null) {
+            this.saveInActivePerson(this.getOneByOibInActive(oib));
+            if (this.fileWriterService.isFileDeletedOfDeletedPerson(oib)) {
+                this.getOneByOib(oib);
+            }
+        }
+    }
+
     private void saveInActivePerson(final Person person) {
         person.setFile(this.fileService.storeNewInactiveFile());
         this.personRepository.save(person);
     }
+
     private Person saveActivePerson(final Person person) {
         person.setFile(this.fileService.storeFile());
         return this.personRepository.save(person);
