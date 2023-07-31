@@ -35,7 +35,7 @@ public class FileWriterServiceImpl implements FileWriterService {
             try (FileOutputStream fos = new FileOutputStream(file);
                  final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
                 bw.write(this.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(person));
-//                bw.write(this.buildPersonValuesAsStringInRow(person, this.objectMapper).toString());
+//                bw.write(this.buildPersonValuesInNewLineAsPlainString(person).toString());
                 log.info(SUCESS_MSG_FILE_WRITTEN);
             } catch (RuntimeException | IOException ex) {
                 log.error(ERROR_MSG_FILE_WRITING + new UnableToWriteNewFileFileRuntimeException(person), ex.fillInStackTrace());
@@ -74,7 +74,7 @@ public class FileWriterServiceImpl implements FileWriterService {
         return isFileEquals.get();
     }
 
-    private StringBuilder buildPersonValuesAsStringInRow(Person person, ObjectMapper objectMapper) throws JsonProcessingException {
+    private StringBuilder buildPersonValuesInNewLineAsPlainString(final Person person) throws JsonProcessingException {
         return new StringBuilder()
                 .append(objectMapper.writeValueAsString(person.getOib())).append("\n")
                 .append(objectMapper.writeValueAsString(person.getName())).append("\n")
