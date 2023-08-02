@@ -41,7 +41,7 @@ public class PersonController {
     @GetMapping(OIB)
     public ResponseEntity<PersonDTO> getByOib(@PathVariable final String oib) {
         final Person person = this.personService.getOneByOib(oib);
-        log.info(PERSON+ SUCCESSFULLY_BY_OIB);
+        log.info(PERSON + SUCCESSFULLY_BY_OIB);
         return this.personService.getPersonDTOResponseEntity(person);
     }
 

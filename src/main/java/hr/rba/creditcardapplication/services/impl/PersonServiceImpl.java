@@ -38,7 +38,7 @@ public class PersonServiceImpl implements PersonService {
     public Person getOneByOib(final String oib) {
         Optional<Person> person = this.personRepository.findByOib(oib);
         if (oib != null) {
-            person.ifPresent(this.fileWriterService::createPersonFile);
+            person.ifPresent(this.fileWriterService::writeValuesToFile);
         }
         return person.orElseThrow(() -> new PersonNotFoundByOibRuntimeException(oib));
     }

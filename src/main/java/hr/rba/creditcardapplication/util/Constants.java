@@ -1,7 +1,12 @@
 package hr.rba.creditcardapplication.util;
 
 public class Constants {
-    public static final String FILE_LOCATION = "file/";
+    private Constants() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static final String DIRECTORY_NAME = "file";
+    public static final String UNABLE_TO_CREATE_DIRECTORY = "Unable to create directory! ";
     public static final String OLD_FILE_IS_DELETED = "Oib matches and old file is deleted, and replaced with new one of status 'INACTIVE'";
     public static final String DELETING_NON_EXISTING_PERSON = "Error in file writer while deleting!";
     public static final String ERROR_MSG_FILE_WRITING = "Error in file writer! ";
