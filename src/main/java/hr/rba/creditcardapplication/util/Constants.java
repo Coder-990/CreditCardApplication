@@ -22,4 +22,11 @@ public class Constants {
     public static final String DELETED_SUCCESSFULLY = "deleted successfully";
     public static final String SUCCESSFULLY_BY_OIB = "fetched successfully by oib";
     public static final String PERSONS = "Persons ";
+    public static final String GET_ALL = "all";
+    public static final String GET_BY = "getBy/";
+    public static final String STORE = "store";
+    public static final String UPDATE_BY = "updateBy/";
+    public static final String REMOVE_BY = "removeBy/";
+    public static final String OIB = "{oib}";
+    public static final String ID = "{id}";
 }

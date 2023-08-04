@@ -20,13 +20,11 @@ import static hr.rba.creditcardapplication.util.Constants.*;
 @RequiredArgsConstructor
 public class PersonController {
 
-    public static final String BASE_URL = "api/v1/persons";
-    public static final String OIB = "/{oib}";
-    public static final String ID = "/{id}";
+    protected static final String BASE_URL = "api/v1/person/";
 
     private final PersonService personService;
 
-    @GetMapping()
+    @GetMapping(GET_ALL)
     public List<PersonDTO> getAll() {
         final List<PersonDTO> personDTOS = this.personService.getAll()
                 .stream().map(this.personService::convertToDto).toList();
@@ -38,28 +36,28 @@ public class PersonController {
         return personDTOS;
     }
 
-    @GetMapping(OIB)
+    @GetMapping(GET_BY + OIB)
     public ResponseEntity<PersonDTO> getByOib(@PathVariable final String oib) {
         final Person person = this.personService.getOneByOib(oib);
         log.info(PERSON + SUCCESSFULLY_BY_OIB);
         return this.personService.getPersonDTOResponseEntity(person);
     }
 
-    @PostMapping()
+    @PostMapping(STORE)
     public ResponseEntity<PersonDTO> store(@RequestBody final PersonDTO personDTO) {
         final Person person = this.personService.storePerson(this.personService.convertToEntity(personDTO));
         log.info(PERSON + STORED_PERMANENTLY);
         return this.personService.savePersonDTOResponseEntity(person);
     }
 
-    @PutMapping(ID)
+    @PutMapping(UPDATE_BY + ID)
     public ResponseEntity<PersonDTO> update(@RequestBody final PersonDTO personDTO, @PathVariable final Long id) {
         final Person person = this.personService.updateExistingPerson(this.personService.convertToEntity(personDTO), id);
         log.info(PERSON + UPDATED_SUCCESSFULLY);
         return this.personService.savePersonDTOResponseEntity(person);
     }
 
-    @DeleteMapping(OIB)
+    @DeleteMapping(REMOVE_BY + OIB)
     public HttpStatus delete(@PathVariable final String oib) {
         final HttpStatus status = this.personService.deletePersonByOib(oib);
         log.info(PERSON + DELETED_SUCCESSFULLY);
